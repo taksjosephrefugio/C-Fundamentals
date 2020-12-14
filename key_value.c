@@ -1,65 +1,105 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include<stdio.h>			// printf
+#include<stdlib.h>			// malloc
+#include<string.h>			// strlen
+#define SIZE_OF_NAME 128
 
-typedef struct KEY_VALUE_PAIR {
-	char* name;
-	int phoneNumber;
-} KEY_VALUE_PAIR;
+//TODO: Add user prompt for god sakes. It compiles and run but no one knows what to do.
 
+typedef struct {
+	char name[SIZE_OF_NAME];
+	int number;
+} Contact;
 
-//Takes a string pointer from main and this function will prompt the user to type a string
-//and it will return the string pointer with said user input string
-char* getUserString() {
-	char*teststring = malloc(sizeof(char));
-	int strlen = 0;
-	char userchar;												//For storing char to be tested
-	while ((userchar != ' ' && userchar != '\n') && userchar != '\t') 
-	{
-		scanf("%c", &userchar);											//Prompting user to input a char
-		strlen++;													// Increase length of string by one corresponding to user inputting a char
-		teststring = realloc(teststring, sizeof(char) * strlen);	// increasing size of teststring by one
+// FUNCTION PROTOTYPES
+int get_greatest_strlen(Contact* contact, int LISTSIZE);
+int print_header();
 
-		//append the new char to the end of teststring
-		if ((userchar != ' ' && userchar != '\n') && userchar != '\t') {
-			teststring[strlen-1] = userchar;
-		}
-		//if the user input is a SPACE,TAB, or NEWLINE then add a terminator at the end of teststring
-		else if ((userchar != ' ' || userchar != '\n') || userchar != '\t') {
-			teststring[strlen-1] = '\0';
-		}
-		else {
-			printf("Logic Error. Please check if-else statement.\n");	//Error-Message when logic fails
-		}	
-	}
-	return teststring;
-}
-
-
-int getPhoneNumber() {
-	int dumloc = 0;
-	scanf("%d", &dumloc);
-	return dumloc;
-}
-
-
-int getNumOfAccounts() {
-	int dumloc = 0;
-	scanf("%d", &dumloc);
-	return dumloc;
-}
-
-int main()
+void main()
 {
-	int SIZE = getNumOfAccounts();
+	int CONTACT_SIZE;
+	printf("No. of contacts to add: ");
+	scanf("%d", &CONTACT_SIZE);
+	getchar();								// get rid of newline made by scanf
 
-	KEY_VALUE_PAIR account[SIZE];
+	Contact my_contact_list[CONTACT_SIZE];
 
-	for (int i=0; i<SIZE; i++) {
-		account[i].name = getUserString();
-		account[i].phoneNumber = getPhoneNumber();
+	// Prompt user for info
+	for(int i=0; i<CONTACT_SIZE; i++) {
+		printf("Enter details for contact #%d\n", i+1);
+		
+		printf("    Name: ");
+		fgets(my_contact_list[i].name, SIZE_OF_NAME, stdin);
+		
+		printf("    Phonenumber: ");
+		scanf("%d", &my_contact_list[i].number);
+		getchar();
+		printf("\n");
 	}
 
-	// TO-DO: Print contents of account[SIZE] to make sure no loss of data
-	return 0;
+	// Find out greatest string length out of all the name of the entries
+	int key_col_width = get_greatest_strlen(my_contact_list, CONTACT_SIZE) + 1;
+	printf("Column width should be %d\n", key_col_width);
+	printf("\n");
+	printf("\n");
+	
+	// Print Results Header
+	int header1_width = print_header();
+	if (key_col_width < header1_width) {
+		key_col_width = header1_width;
+	}
+
+	// Print key-value pairs
+	for(int i=0; i<CONTACT_SIZE; i++) {
+		for(int j=0; j<(strlen(my_contact_list[i].name) - 1); j++) {
+			printf("%c", my_contact_list[i].name[j]);
+		}
+
+		if (strlen(my_contact_list[i].name) < key_col_width) {
+			int numspaces = strlen(my_contact_list[i].name) - key_col_width;
+			printf("%*c", numspaces, ' ');
+		}
+		
+		printf(" | ");
+		printf("%d", my_contact_list[i].number);
+		printf("\n");
+	}
+}
+
+int get_greatest_strlen(Contact* contact, int LISTSIZE) {
+	int ret=4;
+
+	for(int i=0; i<LISTSIZE; i++) {
+		if (strlen(contact[i].name) > ret) { ret=strlen(contact[i].name); }
+	}
+
+	return ret;
+}
+
+int print_header() {
+	char* header1 = malloc(128 * sizeof(char));
+	char* header2 = malloc(128 * sizeof(char));
+	strcpy(header1, "Name (Key)");
+	strcpy(header2, "Phonenumber (Value)");
+	header1 = realloc(header1, strlen(header1) * sizeof(char));
+	header2 = realloc(header2, strlen(header2) * sizeof(char));
+
+	printf("=============== RESULTS ===============\n");
+
+	for(int i=0; i<strlen(header1); i++) {
+		printf("%c", header1[i]);
+	}
+
+	printf(" | ");
+
+	for(int i=0; i<strlen(header2); i++) {
+		printf("%c", header2[i]);
+	}
+
+	printf("\n");
+
+	int ret = strlen(header1) + 1;
+	free(header1);
+	free(header2);
+	
+	return ret;
 }
