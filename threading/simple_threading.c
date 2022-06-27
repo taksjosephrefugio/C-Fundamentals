@@ -1,16 +1,21 @@
 #include<stdio.h>
 #include<pthread.h>
-#include <unistd.h>
+#include <unistd.h>     // sleep()
 
-void job(int sleeptime) {
-    printf(">>> Sleeping for %d seconds...\n", sleeptime);
-    sleep(sleeptime);
-}
+// FUNCTION PROTOTYPES
+void *job(void *);
+
 
 void main() {
+    int sleeptime = 1;
     pthread_t single_thread;
+    pthread_create(&single_thread, NULL, job, (void *) &sleeptime);
+    pthread_join(single_thread, NULL);
+}
 
-    for(int x=1; x <= 5; x++) {
-        job(x);
-    }
+
+void *job(void *time_in_seconds) {
+    int sleeptime = *(int *)time_in_seconds;
+    printf(">>> Sleeping for %d seconds...\n", sleeptime);
+    sleep(sleeptime);
 }

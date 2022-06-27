@@ -3,3 +3,4 @@ output/
 
 # IDE-related ignores
 .vscode
+scratch.c

@@ -5,12 +5,16 @@ clean:
 	@rm keyval
 
 simple_threading: threading/simple_threading.c
-	$(MAKE) --quiet create_outputdir
-	gcc threading/simple_threading.c -o output/simple_threading -std=c17
+	@$(MAKE) --quiet create_outputdir
+	gcc -o output/simple_threading -std=c17 -pthread threading/simple_threading.c
 
 keyval: key_value.c
-	$(MAKE) --quiet create_outputdir
-	gcc key_value.c -o keyval -std=c17
+	@$(MAKE) --quiet create_outputdir
+	gcc -o keyval -std=c17 key_value.c
+
+scratch: scratch.c
+	@$(MAKE) --quiet create_outputdir
+	gcc -o output/scratch -std=c17 scratch.c
 
 create_outputdir:
 	@mkdir --parent output
