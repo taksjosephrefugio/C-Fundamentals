@@ -1,8 +1,8 @@
-.PHONY := create_outputdir
-.DEFAULT_GOAL := simple_threading
+.PHONY := clean create_outputdir
+.DEFAULT_GOAL := help
 
 clean:
-	@rm keyval
+	@rm -rv output/
 
 simple_threading: threading/simple_threading.c
 	@$(MAKE) --quiet create_outputdir
@@ -10,7 +10,7 @@ simple_threading: threading/simple_threading.c
 
 keyval: key_value.c
 	@$(MAKE) --quiet create_outputdir
-	gcc -o keyval -std=c17 key_value.c
+	gcc -o output/keyval -std=c17 key_value.c
 
 scratch: scratch.c
 	@$(MAKE) --quiet create_outputdir
@@ -22,4 +22,10 @@ create_outputdir:
 help:
 	@echo "Usage: "
 	@echo ""
-	@echo "make keyval  - compile key_value.c [executable: keyval]"
+	@echo "make clean               - delete output/ dir and all its contents (all executables)"
+	@echo "make scratch             - compile scratch.c"
+	@echo "make keyval              - compile key_value.c"
+	@echo "make simple_threading    - compile simple_threading.c"
+	@echo "make help                - prints this help message"
+	@echo
+	@echo "Note: Compiled executables are found inside output/ directory"

@@ -1,4 +1,3 @@
-#include<stdio.h>
 /*
 Simple Threading Demo Code in C
 Achieved via POSIX Threading (pthread)
@@ -9,6 +8,7 @@ and outputs -- really 'joining' thre threads -- as soon as they are finished wit
 Copyright(c) Taks Joseph Refugio
 Developer contact: taksjosephrefugio@gmail.com
 */
+#include<stdio.h>
 #include<stdlib.h>      // malloc()
 #include<pthread.h>
 #include <unistd.h>     // sleep()
